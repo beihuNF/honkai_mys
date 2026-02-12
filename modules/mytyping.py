@@ -22,7 +22,6 @@ class Config(BaseModel):
                 encoding="utf8",
         ) as f:
             CONFIG = yaml.load(f, Loader=yaml.FullLoader)
-            f.close()
         return CONFIG
 
 

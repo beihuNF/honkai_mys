@@ -1,5 +1,6 @@
 import json
 import os
+import asyncio
 from typing import Optional
 
 from sqlitedict import SqliteDict
@@ -34,11 +35,14 @@ class DB(SqliteDict):
             encode=encode,
             decode=decode,
         )
+        self._lock = asyncio.Lock()
 
-    def set_region(self, role_id: str, region: str) -> None:
-        data = self.get(role_id, {})
-        data.update({"region": region})
-        self[role_id] = data
+    async def set_region(self, role_id: str, region: str) -> None:
+        async with self._lock:
+            data = self.get(role_id, {})
+            data.update({"region": region})
+            self[role_id] = data
+            self.commit()
 
     def get_region(self, role_id: str) -> Optional[str]:
         if self.get(role_id):
@@ -50,10 +54,12 @@ class DB(SqliteDict):
         """获取上次查询的uid"""
         return self[qid]["role_id"]
 
-    def set_uid_by_qid(self, qid: str, uid: str) -> None:
-        data = self.get(qid, {})
-        data.update({"role_id": uid})
-        self[qid] = data
+    async def set_uid_by_qid(self, qid: str, uid: str) -> None:
+        async with self._lock:
+            data = self.get(qid, {})
+            data.update({"role_id": uid})
+            self[qid] = data
+            self.commit()
 
     def get_cookie(self, qid: str) -> Optional[str]:
         try:
@@ -73,7 +79,9 @@ class DB(SqliteDict):
                 return None
         return cookie
 
-    def set_cookie(self, qid: str, cookie: str) -> None:
-        data = self.get(qid, {})
-        data.update({"cookie": cookie})
-        self[qid] = data
+    async def set_cookie(self, qid: str, cookie: str) -> None:
+        async with self._lock:
+            data = self.get(qid, {})
+            data.update({"cookie": cookie})
+            self[qid] = data
+            self.commit()

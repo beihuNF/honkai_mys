@@ -13,8 +13,8 @@ from nonebot.params import CommandArg, RegexGroup
 
 from .modules.database import DB
 from .modules.query import Finance, GetInfo, InfoError
-from .modules.image_handle import DrawCharacter, DrawFinance, DrawIndex, ItemTrans
-from .modules.util import NotBindError
+from .modules.image_handle import DrawCharacter, DrawFinance, DrawIndex
+from .modules.util import ItemTrans, NotBindError
 from .modules.mytyping import Index
 
 _help = """
@@ -87,8 +87,8 @@ async def bh3_player_card(bot: Bot, ev: Event, args: Message = CommandArg()):
         await bot.send(ev, str(e))
         return
     await bot.send(ev, MessageSegment.reply(ev.message_id) + "制图中，请稍后")
-    region_db.set_region(role_id, region_id)
-    qid_db.set_uid_by_qid(qid, role_id)
+    await region_db.set_region(role_id, region_id)
+    await qid_db.set_uid_by_qid(qid, role_id)
     ind = DrawIndex(**ind)
     im = await ind.draw_card(qid)
     img = MessageSegment.image(im)
@@ -112,8 +112,8 @@ async def bh3_chara_card(bot: Bot, ev: Event, args: Message = CommandArg()):
         await bot.send(ev, str(e), at_sender=True)
         return
     await bot.send(ev, MessageSegment.reply(ev.message_id) + "制图中，请稍后")
-    region_db.set_region(role_id, region_id)
-    qid_db.set_uid_by_qid(qid, role_id)
+    await region_db.set_region(role_id, region_id)
+    await qid_db.set_uid_by_qid(qid, role_id)
     index = Index(**index_data["data"])
     dr = DrawCharacter(**data["data"])
     im = await dr.draw_chara(index, qid)
@@ -157,6 +157,7 @@ async def bindcookie(ev: Event, msg: list = RegexGroup()):
     cookieraw = f"{msg[2]},{msg[3]}"
     try:
         spider = Finance(qid=qid, cookieraw=cookieraw)
+        await spider.save_cookie(qid)
     except InfoError as e:
         await bind_cookie.finish(message=f"{e}")
     fi = await spider.get_finance()

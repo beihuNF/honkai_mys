@@ -271,7 +271,9 @@ class Finance(GetInfo):
         else:
             server_id, role_id = self.get_role()
         if "cookie" not in locals():
-            self.db.set_cookie(qid, self.cookie)
+            self.do_save_cookie = True
+        else:
+            self.do_save_cookie = False
         super().__init__(server_id=server_id, role_id=role_id)
         self.lastfinance = self.generate("上月手账")
         self.thisfinance = self.generate("本月手账")
@@ -285,3 +287,7 @@ class Finance(GetInfo):
             item, data = await self.fetch(url, self.cookie)
             financedata.update({item: data["data"]})
         return financedata
+
+    async def save_cookie(self, qid: str):
+        if self.do_save_cookie:
+            await self.db.set_cookie(qid, self.cookie)
