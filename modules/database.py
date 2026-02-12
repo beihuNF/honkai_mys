@@ -8,7 +8,7 @@ from .mytyping import config
 
 
 class DB(SqliteDict):
-    cahce_dir = os.path.join(os.path.dirname(__file__), "../", config.cache_dir)
+    cache_dir = os.path.join(os.path.dirname(__file__), "../", config.cache_dir)
 
     def __init__(
         self,
@@ -20,10 +20,10 @@ class DB(SqliteDict):
         encode=json.dumps,
         decode=json.loads,
     ) -> None:
-        if not os.path.exists(self.cahce_dir):
-            os.mkdir(self.cahce_dir)
+        if not os.path.exists(self.cache_dir):
+            os.mkdir(self.cache_dir)
         filename = os.path.join(
-            os.path.dirname(__file__), "../", self.cahce_dir, filename
+            os.path.dirname(__file__), "../", self.cache_dir, filename
         )
         super().__init__(
             filename=filename,

@@ -130,7 +130,7 @@ async def show_finance(bot: Bot, ev: Event, args: Message = CommandArg()):
         try:
             await bot.delete_msg(message_id=ev.message_id)
             ret = ""
-        except:
+        except Exception:
             ret = "请撤回！"
         await bot.send(ev, f"{ret}不支持在群内绑定，请添加bot好友后私聊绑定。", at_sender=True)
         return
@@ -155,7 +155,6 @@ async def show_finance(bot: Bot, ev: Event, args: Message = CommandArg()):
 async def bindcookie(ev: Event, msg: list = RegexGroup()):
     qid = ev.get_user_id()
     cookieraw = f"{msg[2]},{msg[3]}"
-    print(cookieraw)
     try:
         spider = Finance(qid=qid, cookieraw=cookieraw)
     except InfoError as e:

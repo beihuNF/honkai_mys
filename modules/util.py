@@ -156,7 +156,6 @@ class ItemTrans(object):
             encoding="utf8",
         ) as f:
             region = json.load(f)
-            f.close()
         for server_id, alias in region.items():
             if no in alias["alias"] or no == alias["name"]:
                 return server_id
@@ -171,7 +170,6 @@ class ItemTrans(object):
             encoding="utf8",
         ) as f:
             region = json.load(f)
-            f.close()
         return region[region_id]["name"]
 
     @staticmethod

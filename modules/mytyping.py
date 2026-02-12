@@ -13,8 +13,6 @@ class Config(BaseModel):
     is_egenshin: bool
     egenshin_dir: Union[str, None]
     cache_dir: str
-    username: Optional[str]
-    password: Optional[str]
 
     @staticmethod
     def load_config() -> dict:
@@ -337,28 +335,3 @@ class FinanceInfo(BaseModel):
     index: findex
     getHcoinRecords: FinanceRecord
     getStarRecords: FinanceRecord
-
-
-class result(BaseModel):
-    """签到用"""
-    region:str
-    game_uid:str
-    nickname:str
-    level:int
-    region_name:str
-    total_sign_day:int
-    is_sign:bool
-    reward_icon:str
-    reward_name:str
-    reward_cnt:int
-    # reward_total_sign_day:int
-    # reward_today:str
-    # icon:str
-    # name:str
-    # cnt:int
-    # reward_sign_cnt_missed:int
-    today:str
-    status:str
-    addons:str
-    sign_response:Optional[dict]
-    end:str
